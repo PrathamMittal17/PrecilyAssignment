@@ -6,6 +6,7 @@ from sentence_transformers import SentenceTransformer
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+import uvicorn
 pd.options.mode.chained_assignment = None
 
 # Creating FastAPI app
@@ -22,18 +23,13 @@ app.add_middleware(
 # Importing the sentence transformer model
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-# Making the homepage endpoint
-@app.get("/")
-def root():
-    return {"message": "Hello World"}
-
 
 class Item(BaseModel):
     text1: str
     text2: str
 
 # Making the endpoint for finding similarity between sentences
-@app.post('/predict')
+@app.post('/')
 def predict(data: Item):
     embedding_1 = model.encode(data.text1)
     embedding_2 = model.encode(data.text2)
